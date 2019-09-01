@@ -2,34 +2,34 @@
 function Accuracy =DV0(NodeAmount,BeaconAmount,R,kk) 
 BorderLength=100; 
 UNAmount=NodeAmount-BeaconAmount; 
-% D=zeros(NodeAmount,NodeAmount);%δ???絽??????????????BeaconAmount??NodeAmount?? 
-h=zeros(NodeAmount,NodeAmount);%????????0??BeaconAmount??NodeAmount?? 
-X=zeros(2,UNAmount);%???????????????? 
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~????????????????????????????????~~~~~~~~~~~~~~~~~~~~ 
+% D=zeros(NodeAmount,NodeAmount);%未BeaconAmount锛孨odeAmount
+h=zeros(NodeAmount,NodeAmount);%BeaconAmount锛孨odeAmount
+X=zeros(2,UNAmount);
+
 C=BorderLength.*rand(2,NodeAmount); 
-%?????????????? 
+
 Sxy=[[1:NodeAmount];C]; 
-Beacon=[Sxy(2,1:BeaconAmount);Sxy(3,1:BeaconAmount)];%????????? 
-UN=[Sxy(2,(BeaconAmount+1):NodeAmount);Sxy(3,(BeaconAmount+1):NodeAmount)];%δ???????? 
-%画出节点的初始分布图
+Beacon=[Sxy(2,1:BeaconAmount);Sxy(3,1:BeaconAmount)];
+UN=[Sxy(2,(BeaconAmount+1):NodeAmount);Sxy(3,(BeaconAmount+1):NodeAmount)];
+%鐢诲嚭鑺傜偣鐨勫垵濮嬪垎甯冨浘
 figure(1)
 plot(Sxy(2,1:BeaconAmount),Sxy(3,1:BeaconAmount),'r*',Sxy(2,(BeaconAmount+1):NodeAmount),Sxy(3,(BeaconAmount+1):NodeAmount),'k.') 
 xlim([0,BorderLength]); 
 ylim([0,BorderLength]); 
-title('* ???????? . ???δ????') 
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~????????????????????~~~~~~~~~~~~~~~~~~~~~~ 
+title('* ???????? . ???未????') 
+
 for i=1:NodeAmount 
     for j=1:NodeAmount 
-        Dall(i,j)=((Sxy(2,i)-Sxy(2,j))^2+(Sxy(3,i)-Sxy(3,j))^2)^0.5;%???н????????? 
+        Dall(i,j)=((Sxy(2,i)-Sxy(2,j))^2+(Sxy(3,i)-Sxy(3,j))^2)^0.5; 
         if (Dall(i,j)<=R)&(Dall(i,j)>0) 
-            h(i,j)=1;%??????????? 
+            h(i,j)=1;
         elseif i==j 
             h(i,j)=0; 
         else h(i,j)=inf; 
         end 
     end 
 end 
-%~~~~~~~~~~~~~~~~~~~~~~~~~???·???????????????~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
 for k=1:NodeAmount 
     for i=1:NodeAmount 
         for j=1:NodeAmount 
@@ -40,30 +40,29 @@ for k=1:NodeAmount
     end 
 end 
 h; 
-%~~~~~~~~~~~~~~~~~~~~~~~~~???????????У???~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
 h1=h(1:BeaconAmount,1:BeaconAmount);  
 D1=Dall(1:BeaconAmount,1:BeaconAmount); 
 for i=1:BeaconAmount 
-    dhop(i,1)=sum(D1(i,:))/sum(h1(i,:));%??????????????????? 
+    dhop(i,1)=sum(D1(i,:))/sum(h1(i,:));
 end 
-% D2=Dall(1:BeaconAmount,(BeaconAmount+1):NodeAmount);%BeaconAmount??UNAmount?? 
-h2=h(1:BeaconAmount,(BeaconAmount+1):NodeAmount);%BeaconAmount??UNAmoun t?? 
+% D2=Dall(1:BeaconAmount,(BeaconAmount+1):NodeAmount);%BeaconAmount,UNAmount
+h2=h(1:BeaconAmount,(BeaconAmount+1):NodeAmount);%BeaconAmount,UNAmount
 for i=1:BeaconAmount 
     for j=1:UNAmount 
         if min(h2(:,j))==h2(i,j) 
-            Dhop(1,j)=dhop(i,1);%δ???????????????У??? 
+            Dhop(1,j)=dhop(i,1);
         end 
     end 
 end 
 cc=mean(dhop); 
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~?????????????~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-hop1=h(1:BeaconAmount,(BeaconAmount+1):NodeAmount);%δ?????????????BeaconAmount??UNAmount?? 
+
+hop1=h(1:BeaconAmount,(BeaconAmount+1):NodeAmount);
 for i=1:UNAmount 
-   % hop=Dhop(1,i);%hop????????????У??? 
+ 
   hop=cc; 
-    Distance(:,i)=hop*hop1(:,i);%%Beacon??UN?У? 
+    Distance(:,i)=hop*hop1(:,i);
 end 
-% %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~??С???????δ???????~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 d=Distance; 
 for i=1:2 
     for j=1:(BeaconAmount-1) 
@@ -83,8 +82,7 @@ A=-2*(a');
  for i=1:UNAmount 
      error(1,i)=(((X(1,i)-UN(1,i))^2+(X(2,i)-UN(2,i))^2)^0.5); 
  end 
-%  figure;plot(error,'-o') 
-%  title('???δ????????') 
+
  error=sum(error)/UNAmount; 
  Accuracy=error/R; 
 end
